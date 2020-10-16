@@ -128,4 +128,5 @@ GRAPHENE = {
 
 CORS_ORIGIN_WHITELIST = [
   'http://localhost:8080',
+  'https://michailkap.github.io',
 ]
