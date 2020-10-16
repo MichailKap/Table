@@ -57,6 +57,7 @@
           color="green lighten-3"
           class="mb-10"
           :disabled="selectedRows.length === 0"
+          @click="toFire()"
         >
           <span v-if="selectedRows.length <= 1">Снять с должности</span>
           <span v-if="selectedRows.length > 1">Снять с должностей</span>
@@ -69,14 +70,11 @@
         :items="occupations"
         item-key="name"
       >
-
-        
-        
         <template v-slot:item="props">
           <tr
             :class="{'grey lighten-2' : selectedRows.includes(props.item) &&
                                         props.item.fireDate === null,
-                     'red lighten-2'  : props.item.fireDate !== null}"
+                     'red lighten-2 disabled' : props.item.fireDate !== null}"
             @click="props.item.fireDate === null ? rowClicked(props.item) : false"
             v-if="checked || props.item.fireDate === null"
           >
@@ -103,6 +101,7 @@
                     <v-col
                       cols="12"
                       md="6"
+                      style="width: 100px"
                     >
                       <div class="mt-3">Ставка, ₽</div>
                       <v-text-field
@@ -164,7 +163,6 @@
               <v-simple-checkbox
                 v-model="props.item.byHours"
                 color="success"
-                :disabled="props.item.fireDate !== null"
               ></v-simple-checkbox>
             </td>
           </tr>
@@ -194,6 +192,18 @@ export default {
     occupations: []
   }),
   methods: {
+    toFire() {
+      this.selectedRows.map((item, index, array) => {
+        item.fireDate = new Date();
+
+        var day = String(item.fireDate.getDate()).padStart(2, '0');
+        var month = String(item.fireDate.getMonth() + 1).padStart(2, '0');
+        var year = item.fireDate.getFullYear();
+
+        item.fireDate = day + '.' + month + '.' + year;
+      })
+      this.selectedRows.length = 0
+    },
     rowClicked(row) {
       this.toggleSelection(row);
     },
@@ -262,4 +272,7 @@ export default {
 </script>
 
 <style>
+.disabled {
+  pointer-events: none;
+}
 </style>
